@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="purple">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阴曹地府 · 名气排行榜</title>
+    <style>
+        /* ===== CSS 变量（与 forum 一致） ===== */
+        :root {
+            --bg-body: #0b0a0c;
+            --bg-card: #1e1a22;
+            --bg-header: rgba(30,26,34,0.85);
+            --border-color: #3d2a47;
+            --color-logo: #7c5f8c;
+            --color-link: #c9a7d9;
+            --color-text: #b8a7c9;
+            --color-muted: #6a5a6e;
+            --color-post-border: rgba(124,95,140,0.35);
+            --color-post-hover: rgba(124,95,140,0.08);
+            --color-btn-bg: #7c5f8c;
+            --color-btn-shadow: 0 0 30px rgba(124,95,140,0.3);
+            --color-input-bg: #2a242e;
+            --color-input-border: #4a3a4e;
+            --color-delete-bg: #4a2a2e;
+            --color-delete-hover: #6a2a2e;
+            --color-delete-text: #d4a0a0;
+            --shadow-glow: 0 0 20px #3d2a47;
+            --rank-even: rgba(30,26,34,0.5);
+            --rank-hover: rgba(124,95,140,0.15);
+        }
+
+        [data-theme="red"] {
+            --bg-body: #0a0a0a;
+            --bg-card: #1a0a0a;
+            --bg-header: rgba(80,0,0,0.6);
+            --border-color: rgba(255,50,50,0.35);
+            --color-logo: #ff4444;
+            --color-link: #ff9999;
+            --color-text: #d4c4c9;
+            --color-muted: #886a6a;
+            --color-post-border: rgba(255,50,50,0.30);
+            --color-post-hover: rgba(255,50,50,0.08);
+            --color-btn-bg: radial-gradient(#cc2222, #880000);
+            --color-btn-shadow: 0 0 50px rgba(255,0,0,0.25);
+            --color-input-bg: #1a0a0a;
+            --color-input-border: rgba(255,50,50,0.3);
+            --color-delete-bg: #5a1a1a;
+            --color-delete-hover: #7a2a2a;
+            --color-delete-text: #ff8080;
+            --shadow-glow: 0 0 30px rgba(255,0,0,0.2);
+            --rank-even: rgba(40,0,0,0.5);
+            --rank-hover: rgba(255,50,50,0.15);
+        }
+
+        [data-theme="green"] {
+            --bg-body: #0a0a0a;
+            --bg-card: #0a1a0a;
+            --bg-header: rgba(0,40,0,0.6);
+            --border-color: rgba(50,255,50,0.35);
+            --color-logo: #44ff44;
+            --color-link: #99ff99;
+            --color-text: #c4d4c4;
+            --color-muted: #6a8a6a;
+            --color-post-border: rgba(50,255,50,0.30);
+            --color-post-hover: rgba(50,255,50,0.08);
+            --color-btn-bg: radial-gradient(#22cc22, #008800);
+            --color-btn-shadow: 0 0 50px rgba(0,255,0,0.25);
+            --color-input-bg: #0a1a0a;
+            --color-input-border: rgba(50,255,50,0.3);
+            --color-delete-bg: #1a3a1a;
+            --color-delete-hover: #2a5a2a;
+            --color-delete-text: #80ff80;
+            --shadow-glow: 0 0 30px rgba(0,255,0,0.2);
+            --rank-even: rgba(0,40,0,0.5);
+            --rank-hover: rgba(50,255,50,0.12);
+        }
+
+        /* ===== 全局 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'KaiTi', 'Orbitron', sans-serif; }
+        body {
+            background: var(--bg-body);
+            color: var(--color-text);
+            min-height: 100vh;
+            padding-top: 80px;
+            padding-bottom: 40px;
+        }
+
+        /* ===== 顶部导航 ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: var(--bg-header);
+            backdrop-filter: blur(10px);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header .logo {
+            font-size: 1.5rem;
+            color: var(--color-logo);
+            text-shadow: var(--shadow-glow);
+        }
+        .header .logo a { color: inherit; text-decoration: none; }
+        .header .actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .header .actions a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .header .actions a:hover { text-shadow: 0 0 15px var(--color-logo); }
+        .theme-switcher { display: flex; gap: 8px; }
+        .theme-dot {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .theme-dot:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.5); }
+        .theme-dot.active { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .theme-dot.purple { background: #7c5f8c; }
+        .theme-dot.red { background: #cc2222; }
+        .theme-dot.green { background: #22cc22; }
+
+        /* ===== 排行榜容器 ===== */
+        .rank-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .rank-title {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--color-logo);
+            text-shadow: var(--shadow-glow);
+            margin-bottom: 10px;
+        }
+        .rank-subtitle {
+            text-align: center;
+            color: var(--color-muted);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* ===== 排行榜表格 ===== */
+        .rank-table-wrap {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        }
+
+        .rank-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .rank-table th {
+            background: rgba(0,0,0,0.3);
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--color-link);
+            border-bottom: 2px solid var(--border-color);
+            font-size: 1rem;
+        }
+        .rank-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        .rank-table tr:last-child td { border-bottom: none; }
+        .rank-table tbody tr {
+            transition: background 0.2s;
+        }
+        .rank-table tbody tr:nth-child(even) {
+            background: var(--rank-even);
+        }
+        .rank-table tbody tr:hover {
+            background: var(--rank-hover);
+        }
+
+        .rank-num {
+            font-weight: bold;
+            color: var(--color-logo);
+            width: 50px;
+            text-align: center;
+        }
+        .rank-num.top1 { color: #ffd700; }
+        .rank-num.top2 { color: #c0c0c0; }
+        .rank-num.top3 { color: #cd7f32; }
+
+        .rank-nick {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+        .rank-pop {
+            font-weight: bold;
+            color: var(--color-link);
+            width: 100px;
+            text-align: center;
+        }
+        .rank-action {
+            width: 120px;
+            text-align: center;
+        }
+
+        .like-btn {
+			min-width: 70px;   /* 固定最小宽度，防止文字变化撑宽 */
+            background: var(--color-btn-bg);
+            border: none;
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            box-shadow: var(--color-btn-shadow);
+            white-space: nowrap;
+        }
+        .like-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.15);
+        }
+        .like-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            filter: none;
+        }
+
+        .rank-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-muted);
+            font-size: 1.1rem;
+        }
+
+        /* ===== 加载提示 ===== */
+        .loading-tip {
+            text-align: center;
+            color: var(--color-muted);
+            padding: 30px;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 640px) {
+            .header { padding: 8px 14px; flex-wrap: wrap; gap: 6px; }
+            .header .logo { font-size: 1.2rem; }
+            .rank-title { font-size: 1.6rem; }
+            .rank-table th, .rank-table td { padding: 10px 12px; font-size: 0.85rem; }
+            .rank-num { width: 30px; }
+            .rank-pop { width: 70px; }
+            .rank-action { width: 80px; }
+            .like-btn { padding: 4px 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部导航 ===== -->
+    <header class="header">
+        <div class="logo"><a href="/forum.html">👻 幽冥论坛</a></div>
+        <div class="actions">
+            <a href="/forum.html">📋 论坛</a>
+            <a href="/wall.html">📝 留言墙</a>
+            <a href="/rank.html" style="color:var(--color-logo);font-weight:bold;">🏆 名气榜</a>
+            <div class="theme-switcher">
+                <div class="theme-dot purple active" data-theme="purple" title="幽冥紫"></div>
+                <div class="theme-dot red" data-theme="red" title="血月红"></div>
+                <div class="theme-dot green" data-theme="green" title="赛博绿"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== 排行榜主体 ===== -->
+    <div class="rank-container">
+        <div class="rank-title">🏆 地府名气榜</div>
+        <div class="rank-subtitle">—— 点赞助力，名扬阴间 ——</div>
+
+        <div class="rank-table-wrap">
+            <table class="rank-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>昵称</th>
+                        <th>名气值</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="rankBody">
+                    <tr><td colspan="4" class="loading-tip">⚡ 正在召唤排名数据...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. 主题切换
+        // ============================================================
+        (function initTheme() {
+            const saved = localStorage.getItem('forumTheme') || 'purple';
+            document.documentElement.setAttribute('data-theme', saved);
+            document.querySelectorAll('.theme-dot').forEach(dot => {
+                dot.classList.toggle('active', dot.dataset.theme === saved);
+            });
+        })();
+
+        document.querySelectorAll('.theme-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const theme = this.dataset.theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('forumTheme', theme);
+                document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ============================================================
+        // 2. 获取登录状态
+        // ============================================================
+        const token = localStorage.getItem('token');
+        const currentUserId = localStorage.getItem('userId');
+        const isLoggedIn = !!token && !!currentUserId;
+
+        // ============================================================
+        // 3. 加载排行榜
+        // ============================================================
+        const rankBody = document.getElementById('rankBody');
+
+        async function loadRank() {
+            try {
+                const resp = await fetch('/api/rank');
+                if (!resp.ok) throw new Error('加载失败');
+                const users = await resp.json();
+                renderRank(users);
+            } catch (e) {
+                rankBody.innerHTML = `<tr><td colspan="4" class="rank-empty">❌ 加载失败：${e.message}</td></tr>`;
+                console.error(e);
+            }
+        }
+
+        function renderRank(users) {
+            if (!users || users.length === 0) {
+                rankBody.innerHTML = `<tr><td colspan="4" class="rank-empty">📭 地府空无一人，快去注册吧！</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            users.forEach((user, index) => {
+                const rank = index + 1;
+                let rankClass = 'rank-num';
+                if (rank === 1) rankClass += ' top1';
+                else if (rank === 2) rankClass += ' top2';
+                else if (rank === 3) rankClass += ' top3';
+
+                // 关键修改：排行榜记录与用户无关，登录后即可点赞任何记录，不限制自己
+                // 因此仅判断是否登录
+                const canLike = isLoggedIn;
+
+                html += `
+                    <tr data-userid="${user.id}">
+                        <td class="${rankClass}">${rank}</td>
+                        <td class="rank-nick">${escapeHtml(user.displayName)}</td>
+                        <td class="rank-pop">${user.popularity || 0}</td>
+                        <td class="rank-action">
+                            ${canLike
+                                ? `<button class="like-btn" data-id="${user.id}">👍 点赞</button>`
+                                : `<span style="color:var(--color-muted);font-size:0.8rem;">🔒 请登录</span>`
+                            }
+                        </td>
+                    </tr>
+                `;
+            });
+            rankBody.innerHTML = html;
+
+            // 绑定点赞事件
+            rankBody.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', async function() {
+                    const userId = this.dataset.id; // 排行榜记录ID
+                    await likeUser(userId, this);
+                });
+            });
+        }
+
+        // ============================================================
+        // 4. 点赞逻辑
+        // ============================================================
+        async function likeUser(userId, btnElement) {
+            if (!isLoggedIn) {
+                alert('请先登录再点赞！');
+                return;
+            }
+
+            // 禁用按钮防止重复点击
+            btnElement.disabled = true;
+            btnElement.textContent = '⏳ 处理中...';
+
+            try {
+                const resp = await fetch(`/api/rank/like/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await resp.json();
+                if (data.code === 200) {
+                    // 更新该行的名气值
+                    const row = btnElement.closest('tr');
+                    const popCell = row.querySelector('.rank-pop');
+                    if (popCell) {
+                        popCell.textContent = data.newPopularity;
+                    }
+                    // 重新加载整个排行榜（因为排序可能变化）
+                    await loadRank();
+                    // 显示短暂的提示
+                    showToast('✅ ' + data.message);
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (e) {
+                alert('❌ 网络错误，请重试');
+                console.error(e);
+            } finally {
+                // 重新启用按钮（但按钮会被重新渲染，所以不需要单独处理）
+            }
+        }
+
+        // ============================================================
+        // 5. 工具函数
+        // ============================================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(msg) {
+            // 简单提示（也可用更美观的方式）
+            const div = document.createElement('div');
+            div.style.cssText = `
+                position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+                background: var(--bg-card); color: var(--color-text);
+                padding: 12px 30px; border-radius: 12px;
+                border: 1px solid var(--border-color);
+                box-shadow: 0 0 30px rgba(0,0,0,0.6);
+                z-index: 9999;
+                font-family: inherit;
+                font-size: 1rem;
+                transition: opacity 0.5s;
+                opacity: 1;
+            `;
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                div.style.opacity = '0';
+                setTimeout(() => div.remove(), 500);
+            }, 2000);
+        }
+
+        // ============================================================
+        // 6. 启动
+        // ============================================================
+        loadRank();
+        console.log('🏆 地府名气榜已加载，当前用户ID:', currentUserId);
+    </script>
+</body>
+</html>

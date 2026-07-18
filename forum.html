@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地府专属论坛 · 主题可切</title>
+    <style>
+        /* ===== CSS 变量：三种主题 ===== */
+        :root {
+            /* 默认紫色主题 */
+            --bg-body: #0b0a0c;
+            --bg-header: rgba(30, 26, 34, 0.85);
+            --border-header: #3d2a47;
+            --shadow-header: 0 0 30px rgba(60, 40, 70, 0.3);
+            --color-logo: #7c5f8c;
+            --color-link: #c9a7d9;
+            --color-link-hover: #e0d0e8;
+            --color-text: #b8a7c9;
+            --color-meta: #6a5a6e;
+            --border-post: rgba(124, 95, 140, 0.35);
+            --bg-post-hover: rgba(124, 95, 140, 0.08);
+            --border-post-hover: #9b7ab0;
+            --bg-btn-primary: #7c5f8c;
+            --bg-btn-primary-hover: #9b7ab0;
+            --shadow-btn: 0 0 30px rgba(124, 95, 140, 0.3);
+            --color-modal-title: #7c5f8c;
+            --border-modal: #3d2a47;
+            --bg-modal: rgba(30, 26, 34, 0.95);
+            --color-danger: #d4a0a0;
+            --color-success: #a0d4a0;
+        }
+
+        /* 红色主题 */
+        [data-theme="red"] {
+            --bg-body: #0a0a0a;
+            --bg-header: rgba(80, 0, 0, 0.6);
+            --border-header: rgba(255, 50, 50, 0.35);
+            --shadow-header: 0 0 40px rgba(255, 0, 0, 0.15);
+            --color-logo: #ff4444;
+            --color-link: #ff9999;
+            --color-link-hover: #ffcccc;
+            --color-text: #d4c4c9;
+            --color-meta: #886a6a;
+            --border-post: rgba(255, 50, 50, 0.30);
+            --bg-post-hover: rgba(255, 50, 50, 0.08);
+            --border-post-hover: rgba(255, 80, 80, 0.55);
+            --bg-btn-primary: radial-gradient(circle at 30% 30%, #cc2222, #880000);
+            --bg-btn-primary-hover: radial-gradient(circle at 30% 30%, #ee3333, #aa0000);
+            --shadow-btn: 0 0 50px rgba(255, 0, 0, 0.25);
+            --color-modal-title: #ff6666;
+            --border-modal: rgba(255, 50, 50, 0.35);
+            --bg-modal: rgba(20, 0, 0, 0.9);
+            --color-danger: #d4a0a0;
+            --color-success: #80d4a0;
+        }
+
+        /* 荧光绿主题 */
+        [data-theme="green"] {
+            --bg-body: #0a0a0a;
+            --bg-header: rgba(0, 40, 0, 0.6);
+            --border-header: rgba(50, 255, 50, 0.35);
+            --shadow-header: 0 0 40px rgba(0, 255, 0, 0.15);
+            --color-logo: #44ff44;
+            --color-link: #99ff99;
+            --color-link-hover: #ccffcc;
+            --color-text: #c4d4c4;
+            --color-meta: #6a8a6a;
+            --border-post: rgba(50, 255, 50, 0.30);
+            --bg-post-hover: rgba(50, 255, 50, 0.08);
+            --border-post-hover: rgba(80, 255, 80, 0.55);
+            --bg-btn-primary: radial-gradient(circle at 30% 30%, #22cc22, #008800);
+            --bg-btn-primary-hover: radial-gradient(circle at 30% 30%, #33ee33, #00aa00);
+            --shadow-btn: 0 0 50px rgba(0, 255, 0, 0.25);
+            --color-modal-title: #66ff66;
+            --border-modal: rgba(50, 255, 50, 0.35);
+            --bg-modal: rgba(0, 20, 0, 0.9);
+            --color-danger: #a0d4a0;
+            --color-success: #80d4a0;
+        }
+
+        /* ===== 全局样式（使用变量） ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--bg-body);
+            font-family: 'KaiTi', serif;
+            color: var(--color-text);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* 顶部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-header);
+            backdrop-filter: blur(4px);
+            padding: 15px 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-header);
+            box-shadow: var(--shadow-header), inset 0 0 60px rgba(255, 255, 255, 0.02);
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+		.pinned-badge {
+		    color: #ff4444;
+		    font-size: 0.75rem;
+		    font-weight: bold;
+		    background: rgba(255, 68, 68, 0.15);
+		    padding: 2px 12px;
+		    border-radius: 12px;
+		    border: 1px solid rgba(255, 68, 68, 0.3);
+		    white-space: nowrap;
+		    margin-left: 10px;
+		}
+        .logo {
+            font-size: 1.8rem;
+            color: var(--color-logo);
+            text-shadow: 0 0 30px var(--color-logo);
+            letter-spacing: 4px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-info a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .user-info a:hover {
+            color: var(--color-link-hover);
+            text-shadow: 0 0 20px var(--color-link);
+        }
+        .btn-logout {
+            background: rgba(80, 0, 0, 0.3);
+            border: 1px solid var(--border-header);
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        .btn-logout:hover {
+            background: rgba(180, 30, 30, 0.2);
+            border-color: var(--color-logo);
+            box-shadow: 0 0 30px var(--color-logo);
+        }
+
+        /* 主题切换按钮组 */
+		.theme-switcher {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;   /* 让按钮和文字都居中 */
+		    gap: 4px;              /* 标题与按钮间的间距 */
+		}
+        .theme-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+            background: transparent;
+            position: relative;
+        }
+        .theme-btn:hover {
+            transform: scale(1.15);
+            border-color: rgba(255,255,255,0.4);
+        }
+        .theme-btn.active {
+            border-color: #fff;
+            box-shadow: 0 0 15px currentColor;
+        }
+        .theme-btn[data-theme="purple"] { background: #7c5f8c; }
+        .theme-btn[data-theme="red"] { background: #cc2222; }
+        .theme-btn[data-theme="green"] { background: #22cc22; }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* 悬浮按钮 */
+        .fab {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-btn-primary);
+            color: #fff;
+            font-size: 2.4rem;
+            border: 1px solid var(--border-header);
+            box-shadow: var(--shadow-btn), inset 0 0 20px rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fab:hover {
+            transform: scale(1.10);
+            background: var(--bg-btn-primary-hover);
+            box-shadow: var(--shadow-btn);
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--bg-modal);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-modal);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 80px rgba(0,0,0,0.5);
+            position: relative;
+            transition: background 0.3s, border 0.3s;
+        }
+        .modal-box h2 {
+            color: var(--color-modal-title);
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px var(--color-modal-title);
+            letter-spacing: 2px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .modal-close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            background: none;
+            border: none;
+            color: var(--color-meta);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .modal-close:hover { color: var(--color-link); }
+
+        .modal-box input,
+        .modal-box textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-header);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+            transition: 0.3s;
+        }
+        .modal-box input:focus,
+        .modal-box textarea:focus {
+            border-color: var(--color-logo);
+            box-shadow: 0 0 20px var(--color-logo);
+        }
+        .modal-box textarea { min-height: 100px; }
+
+        .btn-row {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        .btn-row button {
+            padding: 10px 30px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .btn-submit {
+            background: var(--bg-btn-primary);
+            color: #fff;
+            border: 1px solid var(--border-header);
+        }
+        .btn-submit:hover {
+            background: var(--bg-btn-primary-hover);
+            box-shadow: var(--shadow-btn);
+        }
+        .btn-cancel {
+            background: rgba(80, 0, 0, 0.2);
+            color: var(--color-text);
+            border: 1px solid var(--border-header);
+        }
+        .btn-cancel:hover {
+            background: rgba(120, 0, 0, 0.2);
+        }
+        .modal-msg {
+            margin-top: 10px;
+            color: var(--color-danger);
+            font-size: 0.95rem;
+        }
+        .modal-msg.success { color: var(--color-success); }
+
+        /* 帖子列表 */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .post-item {
+            background: transparent;
+            padding: 20px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-post);
+            transition: 0.3s ease;
+            box-shadow: 0 0 20px rgba(0,0,0,0.02);
+        }
+        .post-item:hover {
+            background: var(--bg-post-hover);
+            border-color: var(--border-post-hover);
+            box-shadow: 0 0 40px var(--color-logo);
+            transform: translateY(-2px);
+        }
+        .post-title {
+            font-size: 1.3rem;
+            color: var(--color-text);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        .post-meta {
+            font-size: 0.85rem;
+            color: var(--color-meta);
+            margin-bottom: 10px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .post-meta a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .post-meta a:hover {
+            color: var(--color-link-hover);
+            text-shadow: 0 0 20px var(--color-link);
+        }
+        .post-content {
+            color: var(--color-text);
+            line-height: 1.6;
+            margin-top: 5px;
+            word-break: break-word;
+        }
+
+        /* 分页 */
+        .pagination {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            background: transparent;
+            border: 1px solid var(--border-post);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--color-text);
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+        .pagination button:hover {
+            background: var(--bg-post-hover);
+            border-color: var(--border-post-hover);
+            box-shadow: 0 0 20px var(--color-logo);
+        }
+        .pagination button.active {
+            background: var(--bg-btn-primary);
+            border-color: var(--color-logo);
+            color: #fff;
+            box-shadow: var(--shadow-btn);
+        }
+		.theme-label {
+		    color: var(--color-text);
+		    font-size: 0.8rem;
+		    opacity: 0.8;
+		}
+		.theme-buttons {
+		    display: flex;
+		    gap: 6px;
+		}
+        .empty {
+            text-align: center;
+            color: var(--color-meta);
+            padding: 50px 0;
+        }
+        .loading {
+            text-align: center;
+            color: var(--color-meta);
+            padding: 20px;
+        }
+        .message {
+            margin-top: 10px;
+            color: var(--color-danger);
+            font-size: 0.95rem;
+        }
+        .message.success { color: var(--color-success); }
+    </style>
+</head>
+<body>
+
+<!-- ===== 顶部导航（含主题切换按钮） ===== -->
+<div class="header">
+    <div class="logo">👻 幽冥论坛</div>
+	<a href="/wall.html" style="color:var(--color-muted);font-size:0.9rem;margin-left:12px;text-decoration:none;">
+	        📝 留言墙
+	    </a>
+		<a href="/rank.html" style="color:var(--color-link);">🏆 名气榜</a>
+    <div class="user-info">
+        <a href="#" id="myProfileLink"><span id="userDisplay">加载中...</span></a>
+        <!-- 主题切换按钮组 -->
+        <div class="theme-switcher">
+			<span class="theme-label">主题切换</span>
+			    <div class="theme-buttons">
+            <button class="theme-btn active" data-theme="purple" title="紫色幽冥" style="color:#7c5f8c;"></button>
+            <button class="theme-btn" data-theme="red" title="红黑血月" style="color:#cc2222;"></button>
+            <button class="theme-btn" data-theme="green" title="荧光赛博" style="color:#22cc22;"></button>
+			</div>
+        </div>
+        <button class="btn-logout" id="logoutBtn">🚪 离开地府</button>
+    </div>
+</div>
+
+<!-- ===== 帖子列表 ===== -->
+<div class="container">
+    <div class="post-list" id="postList">
+        <div class="loading">⚡ 正在召唤幽冥帖子……</div>
+    </div>
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- ===== 悬浮“+”按钮 ===== -->
+<button class="fab" id="fabBtn">＋</button>
+
+<!-- ===== 发帖模态框 ===== -->
+<div class="modal-overlay" id="postModal">
+    <div class="modal-box">
+        <button class="modal-close" id="modalCloseBtn">✕</button>
+        <h2>📜 小鬼注意，谨言慎行</h2>
+        <input type="text" id="postTitle" placeholder="帖子标题（例如：今日地府见闻）">
+        <textarea id="postContent" placeholder="✍️ 分享你在冥界的故事……"></textarea>
+        <div class="btn-row">
+            <button class="btn-cancel" id="modalCancelBtn">取消</button>
+            <button class="btn-submit" id="modalSubmitBtn">📤 发布</button>
+        </div>
+        <div class="modal-msg" id="modalMsg"></div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    //  0. 主题切换逻辑
+    // ============================================================
+    const themeBtns = document.querySelectorAll('.theme-btn');
+    // 从 localStorage 读取上次主题
+    const savedTheme = localStorage.getItem('forumTheme') || 'purple';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+        btn.addEventListener('click', function() {
+            const theme = this.dataset.theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('forumTheme', theme);
+            themeBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // ============================================================
+    //  1. 全局变量 & 用户校验
+    // ============================================================
+    const token = localStorage.getItem('token');
+    const nickname = localStorage.getItem('nickname') || '无名鬼';
+    const userId = localStorage.getItem('userId');
+
+    document.getElementById('userDisplay').textContent = `👤 ${nickname}`;
+
+    if (!token) {
+        window.location.href = '/login.html';
+    }
+
+    let currentPage = 0;
+    const pageSize = 10;
+    let totalPages = 0;
+
+    // ============================================================
+    //  2. 工具函数
+    // ============================================================
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function showModalMsg(msg, isSuccess = false) {
+        const el = document.getElementById('modalMsg');
+        el.textContent = msg;
+        el.className = 'modal-msg' + (isSuccess ? ' success' : '');
+    }
+
+    function getAuthHeaders() {
+        return {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+    }
+
+    // ============================================================
+    //  3. 加载帖子列表
+    // ============================================================
+    async function loadPosts(page = 0) {
+        const listEl = document.getElementById('postList');
+        listEl.innerHTML = '<div class="loading">⚡ 正在召唤幽冥帖子……</div>';
+
+        try {
+            const resp = await fetch(`/api/posts?page=${page}&size=${pageSize}`);
+            const data = await resp.json();
+            if (data.code === 200) {
+                const posts = data.data || [];
+                totalPages = Math.ceil(data.total / pageSize) || 0;
+                renderPosts(posts);
+                renderPagination(page);
+            } else {
+                listEl.innerHTML = `<div class="empty">❌ 召唤失败：${data.message}</div>`;
+            }
+        } catch (e) {
+            listEl.innerHTML = '<div class="empty">❌ 网络异常，请检查后端</div>';
+            console.error(e);
+        }
+    }
+
+	function renderPosts(posts) {
+		
+	    const listEl = document.getElementById('postList');
+	    if (!posts || posts.length === 0) {
+	        listEl.innerHTML = '<div class="empty">📭 地府空荡荡，快去发帖吧！</div>';
+	        return;
+	    }
+
+	    let html = '';
+	    posts.forEach(function(post) {
+	        const isPinned = (post.id === 1) || (post.title && post.title.includes('天地初开'));
+
+	        let timeDisplay = post.displayTime || '未知时间';
+	        if (isPinned) {
+	            timeDisplay = '📌 洪荒妖庭末期';
+	        }
+
+	        const viewCount = post.viewCount || 0;
+	        const likeCount = post.likeCount || 0;
+	        const viewDisplay = isPinned ? '9999+' : (viewCount >= 9999 ? '9999+' : viewCount);
+	        const likeDisplay = isPinned ? '9999+' : (likeCount >= 9999 ? '9999+' : likeCount);
+
+	        html += `
+	            <div class="post-item">
+	                <div class="post-title" style="display:flex;justify-content:space-between;align-items:center;">
+	                    <span>${escapeHtml(post.title)}</span>
+	                    ${isPinned ? `<span class="pinned-badge">📌 置顶</span>` : ''}
+	                </div>
+	                <div class="post-meta">
+	                    <a href="/profile.html?userId=${post.userId}">
+	                        👤 ${escapeHtml(post.nickname)}
+	                    </a>
+	                    <span>👁️ ${viewDisplay} 次围观</span>
+	                    <span>❤️ ${likeDisplay} 点赞</span>
+	                    <span>📅 ${timeDisplay}</span>
+	                </div>
+	                <div class="post-content">${escapeHtml(post.content)}</div>
+	            </div>
+	        `;
+	    });
+
+	    listEl.innerHTML = html;
+	}
+
+    function renderPagination(current) {
+        const el = document.getElementById('pagination');
+        if (totalPages <= 1) { el.innerHTML = ''; return; }
+        let html = '';
+        for (let i = 0; i < totalPages; i++) {
+            html += `<button data-page="${i}" class="${i === current ? 'active' : ''}">${i + 1}</button>`;
+        }
+        el.innerHTML = html;
+        el.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const page = parseInt(this.dataset.page);
+                currentPage = page;
+                loadPosts(page);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    }
+
+    // ============================================================
+    //  4. 发帖（模态框）
+    // ============================================================
+    const modal = document.getElementById('postModal');
+    const fabBtn = document.getElementById('fabBtn');
+    const closeBtn = document.getElementById('modalCloseBtn');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+    const submitBtn = document.getElementById('modalSubmitBtn');
+
+    function openModal() {
+        modal.classList.add('active');
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postContent').value = '';
+        document.getElementById('modalMsg').textContent = '';
+        document.getElementById('postTitle').focus();
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    fabBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+    });
+
+    submitBtn.addEventListener('click', async function() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        if (!title || !content) {
+            showModalMsg('⚠️ 标题和内容都不能为空');
+            return;
+        }
+
+        try {
+            const resp = await fetch('/api/posts', {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ title, content })
+            });
+            const data = await resp.json();
+            if (data.code === 200) {
+                showModalMsg(`✅ ${data.message}`, true);
+                setTimeout(() => {
+                    closeModal();
+                    loadPosts(currentPage);
+                }, 800);
+            } else {
+                showModalMsg(`❌ ${data.message}`);
+            }
+        } catch (e) {
+            showModalMsg('❌ 发帖失败，请检查网络');
+            console.error(e);
+        }
+    });
+
+    // Ctrl+Enter 快速提交
+    document.getElementById('postContent').addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            submitBtn.click();
+        }
+    });
+
+    // ============================================================
+    //  5. 退出登录 & “我的空间”链接
+    // ============================================================
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        localStorage.clear();
+        window.location.href = '/login.html';
+    });
+
+    const myUserId = localStorage.getItem('userId');
+    if (myUserId) {
+        document.getElementById('myProfileLink').href = `/profile.html?userId=${myUserId}`;
+    }
+
+    // ============================================================
+    //  6. 启动！
+    // ============================================================
+    loadPosts(0);
+</script>
+</body>
+</html>

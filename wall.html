@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="purple">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阴曹地府 · 幽冥留言墙</title>
+    <style>
+        /* ===== CSS 变量（三种主题） ===== */
+        :root {
+            --bg-body: #0b0a0c;
+            --bg-wall: rgba(20, 0, 0, 0.75);
+            --border-color: rgba(255, 50, 50, 0.25);
+            --wall-shadow: 0 0 40px rgba(255, 0, 0, 0.15);
+            --text-default: #ffcccc;
+            --color-muted: #6a5a6e;
+            --color-link: #c9a7d9;
+            --color-btn-bg: #7c5f8c;
+            --color-btn-shadow: 0 0 30px rgba(124,95,140,0.3);
+            --color-input-bg: #2a242e;
+            --color-input-border: #4a3a4e;
+            --color-delete-text: #d4a0a0;
+        }
+
+        [data-theme="red"] {
+            --bg-body: #0a0a0a;
+            --bg-wall: rgba(20, 0, 0, 0.8);
+            --border-color: rgba(255, 50, 50, 0.35);
+            --wall-shadow: 0 0 50px rgba(255, 0, 0, 0.25);
+            --text-default: #ffcccc;
+            --color-muted: #886a6a;
+            --color-link: #ff9999;
+            --color-btn-bg: radial-gradient(#cc2222, #880000);
+            --color-btn-shadow: 0 0 50px rgba(255,0,0,0.25);
+            --color-input-bg: #1a0a0a;
+            --color-input-border: rgba(255,50,50,0.3);
+            --color-delete-text: #ff8080;
+        }
+
+        [data-theme="green"] {
+            --bg-body: #0a0a0a;
+            --bg-wall: rgba(0, 20, 0, 0.8);
+            --border-color: rgba(50, 255, 50, 0.35);
+            --wall-shadow: 0 0 50px rgba(0, 255, 0, 0.15);
+            --text-default: #ccffcc;
+            --color-muted: #6a8a6a;
+            --color-link: #99ff99;
+            --color-btn-bg: radial-gradient(#22cc22, #008800);
+            --color-btn-shadow: 0 0 50px rgba(0,255,0,0.25);
+            --color-input-bg: #0a1a0a;
+            --color-input-border: rgba(50,255,50,0.3);
+            --color-delete-text: #80ff80;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'KaiTi', 'Orbitron', sans-serif; }
+        body {
+            background: var(--bg-body);
+            color: var(--text-default);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 顶部导航 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            height: 60px;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            color: var(--color-link);
+            text-shadow: 0 0 20px var(--color-link);
+        }
+        .header .logo a { color: inherit; text-decoration: none; }
+        .header .actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .header .actions a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        .header .actions a:hover { text-shadow: 0 0 15px var(--color-link); }
+        .theme-switcher { display: flex; gap: 8px; }
+        .theme-dot {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .theme-dot:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.5); }
+        .theme-dot.active { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .theme-dot.purple { background: #7c5f8c; }
+        .theme-dot.red { background: #cc2222; }
+        .theme-dot.green { background: #22cc22; }
+
+        /* 文字墙容器 */
+        .text-wall {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            background: var(--bg-wall);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--wall-shadow);
+            overflow: hidden;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* 单个弹幕 */
+        .wall-text {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 24px;
+            font-weight: 500;
+            text-shadow: 0 0 6px currentColor;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 18px;
+            border-radius: 24px;
+            animation: scrollText 15s linear forwards;
+            opacity: 0;
+            pointer-events: none;
+            will-change: transform;
+            border: 1px solid rgba(255,255,255,0.08);
+            transform: translateX(100vw);
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-120vw);
+                opacity: 0;
+            }
+        }
+
+        /* 底部表单 */
+        .wall-form {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 12px 30px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            z-index: 200;
+            height: 80px;
+        }
+        .wall-form input[type="text"] {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 16px;
+            background: var(--color-input-bg);
+            border: 1px solid var(--color-input-border);
+            border-radius: 8px;
+            color: var(--text-default);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+            height: 44px;
+        }
+        .wall-form input[type="text"]:focus {
+            border-color: var(--color-link);
+            box-shadow: 0 0 20px rgba(124,95,140,0.2);
+        }
+        .wall-form input[type="text"]::placeholder { color: var(--color-muted); }
+        .wall-form .form-user { flex: 0 0 130px; }
+        .wall-form .form-content { flex: 2; min-width: 200px; }
+        .wall-form button {
+            padding: 10px 30px;
+            height: 44px;
+            background: var(--color-btn-bg);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: var(--color-btn-shadow);
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .wall-form button:hover {
+            transform: scale(1.03);
+            filter: brightness(1.15);
+        }
+        .wall-form .form-msg {
+            color: var(--color-delete-text);
+            font-size: 0.85rem;
+            flex-basis: 100%;
+            text-align: center;
+            height: 20px;
+        }
+        .wall-form .form-msg.success { color: #80d480; }
+
+        @media (max-width: 640px) {
+            .header { padding: 6px 14px; height: 50px; }
+            .header .logo { font-size: 1.1rem; }
+            .text-wall { top: 50px; bottom: 70px; }
+            .wall-text { font-size: 18px; padding: 3px 12px; }
+            .wall-form { padding: 8px 14px; height: 70px; gap: 8px; }
+            .wall-form input[type="text"] { height: 38px; padding: 6px 12px; font-size: 0.85rem; }
+            .wall-form button { height: 38px; padding: 6px 16px; font-size: 0.85rem; }
+            .wall-form .form-user { flex: 0 0 80px; }
+            .theme-dot { width: 20px; height: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="logo">
+            <a href="/forum.html">👻 幽冥论坛</a>
+            <span style="color:var(--color-muted);font-size:0.85rem;margin-left:8px;">· 留言墙</span>
+        </div>
+        <div class="actions">
+            <a href="/forum.html">📋 返回论坛</a>
+            <div class="theme-switcher">
+                <div class="theme-dot purple active" data-theme="purple" title="幽冥紫"></div>
+                <div class="theme-dot red" data-theme="red" title="血月红"></div>
+                <div class="theme-dot green" data-theme="green" title="赛博绿"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 文字墙 -->
+    <div class="text-wall" id="textWall"></div>
+
+    <!-- 底部表单 -->
+    <form class="wall-form" id="wallForm" autocomplete="off">
+        <input type="text" class="form-content" id="wallContent" placeholder="✍️ 留下你的地府絮语（≤20字）" required maxlength="20">
+        <button type="submit">📤 留言</button>
+        <div class="form-msg" id="formMsg"></div>
+    </form>
+
+    <script>
+        // ============================================================
+        // 1. 主题切换
+        // ============================================================
+        (function initTheme() {
+            const saved = localStorage.getItem('forumTheme') || 'purple';
+            document.documentElement.setAttribute('data-theme', saved);
+            document.querySelectorAll('.theme-dot').forEach(dot => {
+                dot.classList.toggle('active', dot.dataset.theme === saved);
+            });
+        })();
+
+		document.querySelectorAll('.theme-dot').forEach(dot => {
+		    dot.addEventListener('click', function() {
+		        const theme = this.dataset.theme;
+		        document.documentElement.setAttribute('data-theme', theme);
+		        localStorage.setItem('forumTheme', theme);
+		        document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+		        this.classList.add('active');
+		    });
+		});
+
+        // ============================================================
+        // 2. 用户信息
+        // ============================================================
+        const currentUserId = localStorage.getItem('userId');
+        const currentNickname = localStorage.getItem('nickname') || '无名鬼';
+        if (!currentUserId) {
+            window.location.href = '/login.html';
+        }
+       
+
+        // ============================================================
+        // 3. 预设留言（15条）
+        // ============================================================
+        const PRESET_MESSAGES = [
+            { text: "打工王：今天地府工作繁忙，大家辛苦了！", color: "#ff3333" },
+            { text: "美食家：新熬制的汤，免费品尝！", color: "#ff9933" },
+            { text: "某某：本月最佳员工评选开始啦！", color: "#ffff33" },
+            { text: "非牛马：巡逻时发现几个游魂，已带回地府", color: "#33ff33" },
+            { text: "我怎么可能勾不中：新捉的恶鬼已关入十八层地狱", color: "#33ffff" },
+            { text: "公平公正：生死簿系统升级完成，效率提升30%", color: "#3399ff" },
+            { text: "度不完,根本度不..：地狱不空，誓不成佛", color: "#9933ff" },
+            { text: "齐天大圣：老孙来地府逛逛，谁要签名？", color: "#ff33ff" },
+            { text: "混入地府聊天的小可爱：地府网络太差了，连不上天庭WIFI", color: "#ff6666" },
+            { text: "千面美人：地府美容院新开业，八折优惠！", color: "#66ff66" },
+            { text: "黑山不老：万圣节派对筹备中，敬请期待", color: "#6666ff" },
+            { text: "地府歌姬：地府歌唱大赛报名开始啦！", color: "#ffcc00" },
+            { text: "地府第六小兵：地府安全巡逻队招募新成员", color: "#00ccff" },
+            { text: "九叔最爱的弟子:师傅的生日快到了...", color: "#6666ff" },
+            { text: "黄泉路导游：新开发的黄泉旅游线路，欢迎报名", color: "#ff6600" }
+        ];
+
+        // ============================================================
+        // 4. 弹幕核心（修复 bfcache 问题）
+        // ============================================================
+        const wallContainer = document.getElementById('textWall');
+        let allMessages = [];
+        let currentIndex = 0;
+        let activeElements = [];
+        const MAX_ACTIVE = 8;
+        const DISPLAY_DURATION = 15000;
+        let timerId = null;
+        let isInitialized = false;
+
+        // 存储所有 setTimeout ID 以便清理
+        let timeoutIds = [];
+
+        // 获取 API 留言
+        async function fetchUserMessages() {
+            try {
+                const resp = await fetch('/api/wall/list');
+                if (!resp.ok) return [];
+                const data = await resp.json();
+                return data.map(item => ({
+                    text: (item.userName || '无名鬼') + '：' + (item.content || ''),
+                    color: '#b8a7c9',
+                    fromApi: true
+                }));
+            } catch (e) {
+                console.warn('获取留言失败:', e);
+                return [];
+            }
+        }
+
+        // 合并预设 + API
+        function mergeMessages(preset, apiMsgs) {
+            const seen = new Set();
+            const merged = [];
+            preset.forEach(m => {
+                const key = m.text;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    merged.push({ ...m, fromPreset: true });
+                }
+            });
+            apiMsgs.forEach(m => {
+                const key = m.text;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    merged.push({ ...m, fromPreset: false });
+                }
+            });
+            return merged;
+        }
+
+        // 完全随机 top
+        function getRandomTop(containerHeight) {
+            const padding = 30;
+            const maxTop = Math.max(containerHeight - padding - 50, 50);
+            return padding + Math.random() * (maxTop - padding);
+        }
+
+        // 清除所有定时器（包括 setInterval 和所有 setTimeout）
+        function clearAllTimers() {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+            timeoutIds.forEach(id => clearTimeout(id));
+            timeoutIds = [];
+        }
+
+        // 重置所有状态
+        function resetAll() {
+            clearAllTimers();
+            // 清空所有现有弹幕
+            const children = wallContainer.querySelectorAll('.wall-text');
+            children.forEach(el => el.remove());
+            activeElements = [];
+            currentIndex = 0;
+            allMessages = [];
+            isInitialized = false;
+        }
+
+        // 添加一条消息
+        function addNextMessage(forceNewMsg = null) {
+            if (allMessages.length === 0) return;
+
+            if (activeElements.length >= MAX_ACTIVE) {
+                const oldest = activeElements.shift();
+                if (oldest && oldest.parentNode) {
+                    oldest.remove();
+                }
+            }
+
+            let msg;
+            if (forceNewMsg) {
+                msg = forceNewMsg;
+                allMessages = allMessages.filter(m => m.text !== msg.text);
+                allMessages.unshift(msg);
+                currentIndex = 0;
+            } else {
+                msg = allMessages[currentIndex];
+                currentIndex = (currentIndex + 1) % allMessages.length;
+            }
+
+            const rect = wallContainer.getBoundingClientRect();
+            const containerHeight = rect.height || 500;
+
+            const el = document.createElement('div');
+            el.className = 'wall-text';
+            el.textContent = msg.text;
+            el.style.color = msg.color || '#ffcccc';
+            el.style.top = getRandomTop(containerHeight) + 'px';
+
+            wallContainer.appendChild(el);
+            activeElements.push(el);
+
+            // 存储 setTimeout ID 以便清理
+            const id = setTimeout(() => {
+                if (el.parentNode) {
+                    el.remove();
+                }
+                const idx = activeElements.indexOf(el);
+                if (idx !== -1) {
+                    activeElements.splice(idx, 1);
+                }
+                if (activeElements.length < MAX_ACTIVE && allMessages.length > 0 && !forceNewMsg) {
+                    addNextMessage();
+                }
+            }, DISPLAY_DURATION);
+            timeoutIds.push(id);
+        }
+
+        // 调度器
+        function startScheduler() {
+            if (timerId) clearInterval(timerId);
+            timerId = setInterval(() => {
+                if (activeElements.length < MAX_ACTIVE && allMessages.length > 0) {
+                    addNextMessage();
+                }
+            }, 1500);
+        }
+
+        // 初始化（重置 + 填充）
+        async function initWall() {
+            // 重置所有状态和定时器
+            resetAll();
+
+            const apiMsgs = await fetchUserMessages();
+            allMessages = mergeMessages(PRESET_MESSAGES, apiMsgs);
+
+            if (allMessages.length === 0) {
+                wallContainer.innerHTML = '<div style="text-align:center;padding:100px 0;color:var(--color-muted);font-size:1.2rem;">📭 地府空荡荡，快来留言吧！</div>';
+                return;
+            }
+
+            // 逐个添加，每条间隔 700ms
+            const count = Math.min(MAX_ACTIVE, allMessages.length);
+            for (let i = 0; i < count; i++) {
+                const id = setTimeout(() => {
+                    addNextMessage();
+                }, i * 700);
+                timeoutIds.push(id);
+            }
+
+            // 启动调度器
+            startScheduler();
+            isInitialized = true;
+        }
+
+        // ============================================================
+        // 5. 提交留言
+        // ============================================================
+        const form = document.getElementById('wallForm');
+        
+        const contentInput = document.getElementById('wallContent');
+        const formMsg = document.getElementById('formMsg');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+			const displayName = localStorage.getItem('displayName') || currentNickname;
+            const content = contentInput.value.trim();
+
+            if (!content) {
+                formMsg.textContent = '⚠️ 请写下你的地府絮语';
+                formMsg.className = 'form-msg';
+                return;
+            }
+            if (content.length > 20) {
+                formMsg.textContent = '⚠️ 留言不能超过20字';
+                formMsg.className = 'form-msg';
+                return;
+            }
+
+            try {
+				const params = new URLSearchParams();
+				params.append('content', content);   // 只发内容
+
+				
+
+                const resp = await fetch('/api/wall/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: params
+                });
+
+                const data = await resp.json();
+
+                if (resp.ok) {
+                    formMsg.textContent = '✅ ' + (data.msg || '留言成功！');
+                    formMsg.className = 'form-msg success';
+                    contentInput.value = '';
+
+					const newMsg = {
+					    text: displayName + '：' + content,
+					    color: '#c9a7d9',
+					    fromPreset: false,
+					    fromApi: true
+					};
+
+                    if (isInitialized) {
+                        addNextMessage(newMsg);
+                    } else {
+                        await initWall();
+                        setTimeout(() => addNextMessage(newMsg), 300);
+                    }
+
+                } else {
+                    formMsg.textContent = '❌ 留言失败：' + (data.msg || '未知错误');
+                    formMsg.className = 'form-msg';
+                }
+            } catch (err) {
+                formMsg.textContent = '❌ 网络错误，请稍后重试';
+                formMsg.className = 'form-msg';
+                console.error(err);
+            }
+        });
+
+        contentInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // ============================================================
+        // 6. 页面生命周期事件（修复 bfcache）
+        // ============================================================
+        // 当页面从 bfcache 恢复时，强制重新初始化
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                // 从 bfcache 恢复，重新初始化
+                initWall();
+            }
+        });
+
+        // 也可用 visibilitychange，但 pageshow 更可靠
+        // 可选：在页面隐藏前清除定时器（减少资源占用）
+        window.addEventListener('pagehide', function() {
+            clearAllTimers();
+        });
+
+        // ============================================================
+        // 7. 启动
+        // ============================================================
+        initWall();
+        console.log('👻 幽冥留言墙（bfcache修复版）已启动！');
+        console.log('当前用户：', currentNickname, '(ID:', currentUserId, ')');
+    </script>
+</body>
+</html>

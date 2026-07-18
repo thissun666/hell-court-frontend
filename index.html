@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阴曹地府 · 轮回入口</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0b0a0c;
+            font-family: 'KaiTi', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #b8a7c9;
+        }
+        .container {
+            background: #1e1a22;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 40px #3d2a47;
+            width: 400px;
+            border: 1px solid #5a4a5e;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #7c5f8c;
+            text-shadow: 0 0 20px #3d2a47;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #6a5a6e;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #3d2a47;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #8a7a8e;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            color: #c9a7d9;
+            border-bottom-color: #7c5f8c;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a99aae;
+            font-size: 0.95rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #2a242e;
+            border: 1px solid #4a3a4e;
+            border-radius: 8px;
+            color: #d4c4d9;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #7c5f8c;
+            box-shadow: 0 0 10px #3d2a47;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #7c5f8c;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .btn:hover {
+            background: #9b7ab0;
+            box-shadow: 0 0 20px #5a3a6e;
+        }
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            min-height: 25px;
+            color: #d4a0a0;
+        }
+        .hidden { display: none; }
+        .extra-field {
+            display: flex;
+            gap: 10px;
+        }
+        .extra-field select {
+            flex: 1;
+        }
+        .footnote {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5a4a5e;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>👻 阴曹地府</h1>
+    <div class="subtitle">—— 轮回入口 ——</div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="login">登录</div>
+        <div class="tab" data-tab="register">注册</div>
+    </div>
+
+    <!-- ===== 登录表单（只需真名 + 密码） ===== -->
+    <div id="loginForm">
+        <div class="form-group">
+            <label>👤 真名（登录用）</label>
+            <input type="text" id="loginNickname" placeholder="例如：牛头、马面">
+        </div>
+        <div class="form-group">
+            <label>🔑 密码</label>
+            <input type="password" id="loginPassword" placeholder="……">
+        </div>
+        <button class="btn" id="loginBtn">登录 · 入幽冥</button>
+        <div class="message" id="loginMessage"></div>
+    </div>
+
+    <!-- ===== 注册表单（真名 + 昵称 + 密码 + 修为 + 区域） ===== -->
+    <div id="registerForm" class="hidden">
+        <div class="form-group">
+            <label>👤 真名（必填，用于登录）</label>
+            <input type="text" id="regRealName" placeholder="你的真实姓名">
+        </div>
+        <div class="form-group">
+            <label>🏷️ 昵称（必填，用于排行榜和留言墙）</label>
+            <input type="text" id="regDisplayName" placeholder="取个响亮的阴间昵称">
+        </div>
+        <div class="form-group">
+            <label>🔑 密码（必填，至少6位）</label>
+            <input type="password" id="regPassword" placeholder="至少 6 位">
+        </div>
+        <div class="form-group">
+            <label>📖 修为（选填）</label>
+            <select id="regRealm">
+                <option value="鬼卒">鬼卒</option>
+                <option value="鬼差">鬼差</option>
+                <option value="鬼将">鬼将</option>
+                <option value="判官">判官</option>
+                <option value="阎王">阎王</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>⚔️ 所在区域（选填）</label>
+            <select id="regFaction">
+                <option value="无">无</option>
+                <option value="阎罗殿">阎罗殿</option>
+                <option value="轮回司">轮回司</option>
+                <option value="枉死城">枉死城</option>
+                <option value="酆都">酆都</option>
+            </select>
+        </div>
+        <button class="btn" id="registerBtn">注册 · 加入地府论坛</button>
+        <div class="message" id="registerMessage"></div>
+    </div>
+    <div class="footnote">⚡ 注册即代表同意《阴曹地府用户协议》</div>
+</div>
+
+<script>
+    // ---------- Tab 切换 ----------
+    const tabs = document.querySelectorAll('.tab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            if (this.dataset.tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        });
+    });
+
+    // ---------- 工具函数 ----------
+    function showMessage(element, text, isError = true) {
+        element.textContent = text;
+        element.style.color = isError ? '#d4a0a0' : '#a0d4a0';
+    }
+
+    // ---------- 注册 ----------
+    document.getElementById('registerBtn').addEventListener('click', async function() {
+        const realName = document.getElementById('regRealName').value.trim();
+        const displayName = document.getElementById('regDisplayName').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const realm = document.getElementById('regRealm').value;
+        const faction = document.getElementById('regFaction').value;
+        const msg = document.getElementById('registerMessage');
+
+        // 校验必填项
+        if (!realName || !displayName || !password) {
+            showMessage(msg, '⚠️ 真名、昵称和密码都不能为空');
+            return;
+        }
+        if (password.length < 6) {
+            showMessage(msg, '⚠️ 密码至少 6 位');
+            return;
+        }
+
+        try {
+            // 构造 URL 参数（后端暂未接收 realm/faction，可先忽略或扩展）
+            const url = `/api/auth/register?nickname=${encodeURIComponent(realName)}&password=${encodeURIComponent(password)}&displayName=${encodeURIComponent(displayName)}`;
+            // 如果需要传递 realm 和 faction，后端需添加对应 @RequestParam，此处暂不传（选填字段可后续扩展）
+
+            const response = await fetch(url, {
+                method: 'POST'
+            });
+            const data = await response.json();
+            if (data.code === 200) {
+                showMessage(msg, `✅ ${data.message}`, false);
+                // 注册成功自动切换到登录 tab
+                setTimeout(() => {
+                    document.querySelector('[data-tab="login"]').click();
+                    document.getElementById('loginNickname').value = realName;
+                    document.getElementById('loginMessage').textContent = '';
+                }, 1000);
+            } else {
+                showMessage(msg, `❌ ${data.message}`);
+            }
+        } catch (error) {
+            showMessage(msg, '❌ 网络错误，请检查后端是否运行');
+            console.error(error);
+        }
+    });
+
+    // ---------- 登录 ----------
+    document.getElementById('loginBtn').addEventListener('click', async function() {
+        const nickname = document.getElementById('loginNickname').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const msg = document.getElementById('loginMessage');
+
+        if (!nickname || !password) {
+            showMessage(msg, '⚠️ 请输入真名和密码');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nickname, password })
+            });
+            const data = await response.json();
+            if (data.code === 200) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('displayName', data.displayName);
+                localStorage.setItem('nickname', data.nickname);
+                localStorage.setItem('realm', data.realm);
+                localStorage.setItem('faction', data.faction);
+                showMessage(msg, `✅ 登录成功，欢迎 ${data.nickname}！`, false);
+                window.location.href = '/forum.html';
+            } else {
+                showMessage(msg, `❌ ${data.message}`);
+            }
+        } catch (error) {
+            showMessage(msg, '❌ 网络错误');
+            console.error(error);
+        }
+    });
+
+    // 回车键快速提交
+    document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+    document.getElementById('regPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') document.getElementById('registerBtn').click();
+    });
+</script>
+</body>
+</html>
