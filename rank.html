@@ -75,7 +75,6 @@
             --rank-hover: rgba(50,255,50,0.12);
         }
 
-        /* ===== 全局 ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'KaiTi', 'Orbitron', sans-serif; }
         body {
             background: var(--bg-body);
@@ -85,7 +84,6 @@
             padding-bottom: 40px;
         }
 
-        /* ===== 顶部导航 ===== */
         .header {
             position: fixed;
             top: 0;
@@ -100,163 +98,48 @@
             align-items: center;
             border-bottom: 1px solid var(--border-color);
         }
-        .header .logo {
-            font-size: 1.5rem;
-            color: var(--color-logo);
-            text-shadow: var(--shadow-glow);
-        }
+        .header .logo { font-size: 1.5rem; color: var(--color-logo); text-shadow: var(--shadow-glow); }
         .header .logo a { color: inherit; text-decoration: none; }
-        .header .actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .header .actions a {
-            color: var(--color-link);
-            text-decoration: none;
-            font-size: 1rem;
-            transition: 0.3s;
-        }
+        .header .actions { display: flex; align-items: center; gap: 20px; }
+        .header .actions a { color: var(--color-link); text-decoration: none; font-size: 1rem; transition: 0.3s; }
         .header .actions a:hover { text-shadow: 0 0 15px var(--color-logo); }
         .theme-switcher { display: flex; gap: 8px; }
-        .theme-dot {
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.2);
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .theme-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.3s; }
         .theme-dot:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.5); }
         .theme-dot.active { border-color: #fff; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
         .theme-dot.purple { background: #7c5f8c; }
         .theme-dot.red { background: #cc2222; }
         .theme-dot.green { background: #22cc22; }
 
-        /* ===== 排行榜容器 ===== */
-        .rank-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .rank-container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .rank-title { text-align: center; font-size: 2.2rem; color: var(--color-logo); text-shadow: var(--shadow-glow); margin-bottom: 10px; }
+        .rank-subtitle { text-align: center; color: var(--color-muted); margin-bottom: 30px; font-size: 1rem; }
 
-        .rank-title {
-            text-align: center;
-            font-size: 2.2rem;
-            color: var(--color-logo);
-            text-shadow: var(--shadow-glow);
-            margin-bottom: 10px;
-        }
-        .rank-subtitle {
-            text-align: center;
-            color: var(--color-muted);
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
-
-        /* ===== 排行榜表格 ===== */
-        .rank-table-wrap {
-            background: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(0,0,0,0.4);
-        }
-
-        .rank-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .rank-table th {
-            background: rgba(0,0,0,0.3);
-            padding: 16px 20px;
-            text-align: left;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--color-link);
-            border-bottom: 2px solid var(--border-color);
-            font-size: 1rem;
-        }
-        .rank-table td {
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
+        .rank-table-wrap { background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.4); }
+        .rank-table { width: 100%; border-collapse: collapse; }
+        .rank-table th { background: rgba(0,0,0,0.3); padding: 16px 20px; text-align: left; font-weight: 600; letter-spacing: 1px; color: var(--color-link); border-bottom: 2px solid var(--border-color); font-size: 1rem; }
+        .rank-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         .rank-table tr:last-child td { border-bottom: none; }
-        .rank-table tbody tr {
-            transition: background 0.2s;
-        }
-        .rank-table tbody tr:nth-child(even) {
-            background: var(--rank-even);
-        }
-        .rank-table tbody tr:hover {
-            background: var(--rank-hover);
-        }
+        .rank-table tbody tr { transition: background 0.2s; }
+        .rank-table tbody tr:nth-child(even) { background: var(--rank-even); }
+        .rank-table tbody tr:hover { background: var(--rank-hover); }
 
-        .rank-num {
-            font-weight: bold;
-            color: var(--color-logo);
-            width: 50px;
-            text-align: center;
-        }
+        .rank-num { font-weight: bold; color: var(--color-logo); width: 50px; text-align: center; }
         .rank-num.top1 { color: #ffd700; }
         .rank-num.top2 { color: #c0c0c0; }
         .rank-num.top3 { color: #cd7f32; }
 
-        .rank-nick {
-            font-weight: 500;
-            color: var(--color-text);
-        }
-        .rank-pop {
-            font-weight: bold;
-            color: var(--color-link);
-            width: 100px;
-            text-align: center;
-        }
-        .rank-action {
-            width: 120px;
-            text-align: center;
-        }
+        .rank-nick { font-weight: 500; color: var(--color-text); }
+        .rank-pop { font-weight: bold; color: var(--color-link); width: 100px; text-align: center; }
+        .rank-action { width: 120px; text-align: center; }
 
-        .like-btn {
-			min-width: 70px;   /* 固定最小宽度，防止文字变化撑宽 */
-            background: var(--color-btn-bg);
-            border: none;
-            color: #fff;
-            padding: 6px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: 0.3s;
-            box-shadow: var(--color-btn-shadow);
-            white-space: nowrap;
-        }
-        .like-btn:hover {
-            transform: scale(1.05);
-            filter: brightness(1.15);
-        }
-        .like-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            filter: none;
-        }
+        .like-btn { min-width: 70px; background: var(--color-btn-bg); border: none; color: #fff; padding: 6px 18px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.9rem; transition: 0.3s; box-shadow: var(--color-btn-shadow); white-space: nowrap; }
+        .like-btn:hover { transform: scale(1.05); filter: brightness(1.15); }
+        .like-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
 
-        .rank-empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--color-muted);
-            font-size: 1.1rem;
-        }
+        .rank-empty { text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 1.1rem; }
+        .loading-tip { text-align: center; color: var(--color-muted); padding: 30px; }
 
-        /* ===== 加载提示 ===== */
-        .loading-tip {
-            text-align: center;
-            color: var(--color-muted);
-            padding: 30px;
-        }
-
-        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
             .header { padding: 8px 14px; flex-wrap: wrap; gap: 6px; }
             .header .logo { font-size: 1.2rem; }
@@ -270,8 +153,6 @@
     </style>
 </head>
 <body>
-
-    <!-- ===== 顶部导航 ===== -->
     <header class="header">
         <div class="logo"><a href="/forum.html">👻 幽冥论坛</a></div>
         <div class="actions">
@@ -286,7 +167,6 @@
         </div>
     </header>
 
-    <!-- ===== 排行榜主体 ===== -->
     <div class="rank-container">
         <div class="rank-title">🏆 地府名气榜</div>
         <div class="rank-subtitle">—— 点赞助力，名扬阴间 ——</div>
@@ -294,12 +174,7 @@
         <div class="rank-table-wrap">
             <table class="rank-table">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>昵称</th>
-                        <th>名气值</th>
-                        <th>操作</th>
-                    </tr>
+                    <tr><th>#</th><th>昵称</th><th>名气值</th><th>操作</th></tr>
                 </thead>
                 <tbody id="rankBody">
                     <tr><td colspan="4" class="loading-tip">⚡ 正在召唤排名数据...</td></tr>
@@ -309,9 +184,10 @@
     </div>
 
     <script>
-        // ============================================================
-        // 1. 主题切换
-        // ============================================================
+        // ===== 添加后端 API 基础地址 =====
+       const API_BASE = 'https://hell-court-forum-production-caf1.up.railway.app';
+
+        // 主题切换
         (function initTheme() {
             const saved = localStorage.getItem('forumTheme') || 'purple';
             document.documentElement.setAttribute('data-theme', saved);
@@ -330,21 +206,15 @@
             });
         });
 
-        // ============================================================
-        // 2. 获取登录状态
-        // ============================================================
         const token = localStorage.getItem('token');
         const currentUserId = localStorage.getItem('userId');
         const isLoggedIn = !!token && !!currentUserId;
 
-        // ============================================================
-        // 3. 加载排行榜
-        // ============================================================
         const rankBody = document.getElementById('rankBody');
 
         async function loadRank() {
             try {
-                const resp = await fetch('/api/rank');
+                const resp = await fetch(`${API_BASE}/api/rank`);
                 if (!resp.ok) throw new Error('加载失败');
                 const users = await resp.json();
                 renderRank(users);
@@ -368,8 +238,6 @@
                 else if (rank === 2) rankClass += ' top2';
                 else if (rank === 3) rankClass += ' top3';
 
-                // 关键修改：排行榜记录与用户无关，登录后即可点赞任何记录，不限制自己
-                // 因此仅判断是否登录
                 const canLike = isLoggedIn;
 
                 html += `
@@ -388,46 +256,34 @@
             });
             rankBody.innerHTML = html;
 
-            // 绑定点赞事件
             rankBody.querySelectorAll('.like-btn').forEach(btn => {
                 btn.addEventListener('click', async function() {
-                    const userId = this.dataset.id; // 排行榜记录ID
+                    const userId = this.dataset.id;
                     await likeUser(userId, this);
                 });
             });
         }
 
-        // ============================================================
-        // 4. 点赞逻辑
-        // ============================================================
         async function likeUser(userId, btnElement) {
             if (!isLoggedIn) {
                 alert('请先登录再点赞！');
                 return;
             }
 
-            // 禁用按钮防止重复点击
             btnElement.disabled = true;
             btnElement.textContent = '⏳ 处理中...';
 
             try {
-                const resp = await fetch(`/api/rank/like/${userId}`, {
+                const resp = await fetch(`${API_BASE}/api/rank/like/${userId}`, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await resp.json();
                 if (data.code === 200) {
-                    // 更新该行的名气值
                     const row = btnElement.closest('tr');
                     const popCell = row.querySelector('.rank-pop');
-                    if (popCell) {
-                        popCell.textContent = data.newPopularity;
-                    }
-                    // 重新加载整个排行榜（因为排序可能变化）
+                    if (popCell) popCell.textContent = data.newPopularity;
                     await loadRank();
-                    // 显示短暂的提示
                     showToast('✅ ' + data.message);
                 } else {
                     alert('❌ ' + data.message);
@@ -435,14 +291,9 @@
             } catch (e) {
                 alert('❌ 网络错误，请重试');
                 console.error(e);
-            } finally {
-                // 重新启用按钮（但按钮会被重新渲染，所以不需要单独处理）
             }
         }
 
-        // ============================================================
-        // 5. 工具函数
-        // ============================================================
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -451,7 +302,6 @@
         }
 
         function showToast(msg) {
-            // 简单提示（也可用更美观的方式）
             const div = document.createElement('div');
             div.style.cssText = `
                 position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
@@ -459,11 +309,8 @@
                 padding: 12px 30px; border-radius: 12px;
                 border: 1px solid var(--border-color);
                 box-shadow: 0 0 30px rgba(0,0,0,0.6);
-                z-index: 9999;
-                font-family: inherit;
-                font-size: 1rem;
-                transition: opacity 0.5s;
-                opacity: 1;
+                z-index: 9999; font-family: inherit; font-size: 1rem;
+                transition: opacity 0.5s; opacity: 1;
             `;
             div.textContent = msg;
             document.body.appendChild(div);
@@ -473,9 +320,6 @@
             }, 2000);
         }
 
-        // ============================================================
-        // 6. 启动
-        // ============================================================
         loadRank();
         console.log('🏆 地府名气榜已加载，当前用户ID:', currentUserId);
     </script>

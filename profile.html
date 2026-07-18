@@ -93,17 +93,18 @@
             color: var(--color-link-hover);
             text-shadow: 0 0 20px var(--color-link);
         }
-		.pinned-badge {
-		    color: #ff4444;
-		    font-size: 0.75rem;
-		    font-weight: bold;
-		    background: rgba(255, 68, 68, 0.15);
-		    padding: 2px 12px;
-		    border-radius: 12px;
-		    border: 1px solid rgba(255, 68, 68, 0.3);
-		    white-space: nowrap;
-		    margin-left: 10px;
-		}
+        .pinned-badge {
+            color: #ff4444;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background: rgba(255, 68, 68, 0.15);
+            padding: 2px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
         .profile-card {
             background: var(--bg-header);
             backdrop-filter: blur(4px);
@@ -263,9 +264,9 @@
         <div class="avatar" id="avatar">?</div>
         <div class="info">
             <div class="name" id="nickname">加载中...</div>
-			<div class="display-name" id="displayName" style="color:var(--color-muted);font-size:0.9rem;margin-top:4px;">
-			    🏷️ 昵称：<span id="displayNameText">-</span>
-			</div>
+            <div class="display-name" id="displayName" style="color:var(--color-muted);font-size:0.9rem;margin-top:4px;">
+                🏷️ 昵称：<span id="displayNameText">-</span>
+            </div>
             <div class="tags">
                 <span id="realm">修为</span>
                 <span id="faction">势力</span>
@@ -276,10 +277,10 @@
             <div class="num" id="postCount">0</div>
             <div class="label">📜 帖子</div>
         </div>
-		<div class="stat">
-		    <div class="num" id="popularity">0</div>
-		    <div class="label">⭐ 名气值</div>
-		</div>
+        <div class="stat">
+            <div class="num" id="popularity">0</div>
+            <div class="label">⭐ 名气值</div>
+        </div>
     </div>
 
     <!-- 帖子列表 -->
@@ -293,7 +294,10 @@
 </div>
 
 <script>
-    // ===== 主题读取（与 forum.html 共用） =====
+    // ===== 添加后端 API 基础地址 =====
+    const API_BASE = 'https://hell-court-forum-production-caf1.up.railway.app';
+
+    // ===== 主题读取 =====
     const savedTheme = localStorage.getItem('forumTheme') || 'purple';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
@@ -339,40 +343,37 @@
         return colors[Math.abs(hash) % colors.length];
     }
 
-	async function loadProfile() {
-	    try {
-	        const response = await fetch(`/api/users/${userId}/profile`);
-	        const data = await response.json();
-	        if (data.code === 200) {
-	            const p = data.data;
-	            document.getElementById('nickname').textContent = p.nickname;
-	            document.getElementById('realm').textContent = `⚡ ${p.realm || '鬼卒'}`;
-	            document.getElementById('faction').textContent = `🏛️ ${p.faction || '无'}`;
-	            document.getElementById('postCount').textContent = p.postCount || 0;
-	            document.getElementById('createdAt').textContent = `注册于：${new Date(p.createdAt).toLocaleString()}`;
-	            // ===== 新增：设置昵称和名气值 =====
-	            document.getElementById('displayNameText').textContent = p.displayName || '未设置';
-	            document.getElementById('popularity').textContent = p.popularity || 0;
-	            // =================================
-	            const avatar = document.getElementById('avatar');
-	            avatar.textContent = getAvatarChar(p.nickname);
-	            avatar.style.background = getAvatarColor(p.nickname);
-	        } else {
-	            document.getElementById('nickname').textContent = '❌ 加载失败';
-	        }
-	    } catch (error) {
-	        console.error(error);
-	        document.getElementById('nickname').textContent = '❌ 网络错误';
-	    }
-	}
+    async function loadProfile() {
+        try {
+            const response = await fetch(`${API_BASE}/api/users/${userId}/profile`);
+            const data = await response.json();
+            if (data.code === 200) {
+                const p = data.data;
+                document.getElementById('nickname').textContent = p.nickname;
+                document.getElementById('realm').textContent = `⚡ ${p.realm || '鬼卒'}`;
+                document.getElementById('faction').textContent = `🏛️ ${p.faction || '无'}`;
+                document.getElementById('postCount').textContent = p.postCount || 0;
+                document.getElementById('createdAt').textContent = `注册于：${new Date(p.createdAt).toLocaleString()}`;
+                document.getElementById('displayNameText').textContent = p.displayName || '未设置';
+                document.getElementById('popularity').textContent = p.popularity || 0;
+                const avatar = document.getElementById('avatar');
+                avatar.textContent = getAvatarChar(p.nickname);
+                avatar.style.background = getAvatarColor(p.nickname);
+            } else {
+                document.getElementById('nickname').textContent = '❌ 加载失败';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('nickname').textContent = '❌ 网络错误';
+        }
+    }
 
     async function loadPosts(page = 0) {
         const listEl = document.getElementById('postList');
         listEl.innerHTML = '<div class="loading">⚡ 正在召唤帖子...</div>';
-		// 假设已有 `const p = data.data;`
-			
+
         try {
-            const response = await fetch(`/api/users/${userId}/posts?page=${page}&size=${pageSize}`);
+            const response = await fetch(`${API_BASE}/api/users/${userId}/posts?page=${page}&size=${pageSize}`);
             const data = await response.json();
             if (data.code === 200) {
                 const posts = data.data || [];
@@ -388,69 +389,63 @@
         }
     }
 
-	function renderPosts(posts) {
-	    const listEl = document.getElementById('postList');
-	    if (!posts || posts.length === 0) {
-	        listEl.innerHTML = '<div class="empty">📭 这位鬼魂尚未留下任何帖子</div>';
-	        return;
-	    }
+    function renderPosts(posts) {
+        const listEl = document.getElementById('postList');
+        if (!posts || posts.length === 0) {
+            listEl.innerHTML = '<div class="empty">📭 这位鬼魂尚未留下任何帖子</div>';
+            return;
+        }
 
-	    // ---- 排序：置顶帖在前 ----
-	    const sortedPosts = [...posts].sort((a, b) => {
-	        const aPinned = (a.id === 1) || (a.title && a.title.includes('天地初开'));
-	        const bPinned = (b.id === 1) || (b.title && b.title.includes('天地初开'));
-	        if (aPinned && !bPinned) return -1;
-	        if (!aPinned && bPinned) return 1;
-	        return 0;
-	    });
+        const sortedPosts = [...posts].sort((a, b) => {
+            const aPinned = (a.id === 1) || (a.title && a.title.includes('天地初开'));
+            const bPinned = (b.id === 1) || (b.title && b.title.includes('天地初开'));
+            if (aPinned && !bPinned) return -1;
+            if (!aPinned && bPinned) return 1;
+            return 0;
+        });
 
-	    let html = '';
-	    const isOwner = (Number(currentUserId) === Number(userId));
-	    sortedPosts.forEach(post => {
-	        const isPinned = (post.id === 1) || (post.title && post.title.includes('天地初开'));
+        let html = '';
+        const isOwner = (Number(currentUserId) === Number(userId));
+        sortedPosts.forEach(post => {
+            const isPinned = (post.id === 1) || (post.title && post.title.includes('天地初开'));
+            let timeDisplay = post.displayTime || '未知时间';
+            if (isPinned) timeDisplay = '📌 洪荒妖庭末期';
+            const viewCount = post.viewCount || 0;
+            const likeCount = post.likeCount || 0;
+            const viewDisplay = isPinned ? '9999+' : (viewCount >= 9999 ? '9999+' : viewCount);
+            const likeDisplay = isPinned ? '9999+' : (likeCount >= 9999 ? '9999+' : likeCount);
 
-	        // 时间显示
-	        let timeDisplay = post.displayTime || '未知时间';
-	        if (isPinned) {
-	            timeDisplay = '📌 洪荒妖庭末期';
-	        }
+            html += `
+                <div class="post-item" data-postid="${post.id}">
+                    <div class="title" style="display:flex;justify-content:space-between;align-items:center;">
+                        <span>${escapeHtml(post.title)}</span>
+                        ${isPinned ? `<span class="pinned-badge">📌 置顶</span>` : ''}
+                    </div>
+                    <div class="content">${escapeHtml(post.content)}</div>
+                    <div class="post-meta">
+                        👁️ ${viewDisplay} 次观看 · ❤️ ${likeDisplay} 点赞 · 📅 ${timeDisplay}
+                    </div>
+                    ${isOwner ? `<button class="delete-btn" data-id="${post.id}">🗑️ 删除</button>` : ''}
+                </div>
+            `;
+        });
+        listEl.innerHTML = html;
 
-	        const viewCount = post.viewCount || 0;
-	        const likeCount = post.likeCount || 0;
-	        const viewDisplay = isPinned ? '9999+' : (viewCount >= 9999 ? '9999+' : viewCount);
-	        const likeDisplay = isPinned ? '9999+' : (likeCount >= 9999 ? '9999+' : likeCount);
-
-	        html += `
-	            <div class="post-item" data-postid="${post.id}">
-	                <div class="title" style="display:flex;justify-content:space-between;align-items:center;">
-	                    <span>${escapeHtml(post.title)}</span>
-	                    ${isPinned ? `<span class="pinned-badge">📌 置顶</span>` : ''}
-	                </div>
-	                <div class="content">${escapeHtml(post.content)}</div>
-	                <div class="post-meta">
-	                    👁️ ${viewDisplay} 次观看 · ❤️ ${likeDisplay} 点赞 · 📅 ${timeDisplay}
-	                </div>
-	                ${isOwner ? `<button class="delete-btn" data-id="${post.id}">🗑️ 删除</button>` : ''}
-	            </div>
-	        `;
-	    });
-	    listEl.innerHTML = html;
-
-	    if (isOwner) {
-	        document.querySelectorAll('.delete-btn').forEach(btn => {
-	            btn.addEventListener('click', async function(e) {
-	                e.stopPropagation();
-	                const postId = this.dataset.id;
-	                if (!confirm('确定要删除这篇帖子吗？它将永远消失于轮回中。')) return;
-	                await deletePost(postId);
-	            });
-	        });
-	    }
-	}
+        if (isOwner) {
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    const postId = this.dataset.id;
+                    if (!confirm('确定要删除这篇帖子吗？它将永远消失于轮回中。')) return;
+                    await deletePost(postId);
+                });
+            });
+        }
+    }
 
     async function deletePost(postId) {
         try {
-            const response = await fetch(`/api/posts/${postId}`, {
+            const response = await fetch(`${API_BASE}/api/posts/${postId}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });

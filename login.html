@@ -130,7 +130,7 @@
         <div class="tab" data-tab="register">注册</div>
     </div>
 
-    <!-- ===== 登录表单（只需真名 + 密码） ===== -->
+    <!-- 登录表单 -->
     <div id="loginForm">
         <div class="form-group">
             <label>👤 真名（登录用）</label>
@@ -144,7 +144,7 @@
         <div class="message" id="loginMessage"></div>
     </div>
 
-    <!-- ===== 注册表单（真名 + 昵称 + 密码 + 修为 + 区域） ===== -->
+    <!-- 注册表单 -->
     <div id="registerForm" class="hidden">
         <div class="form-group">
             <label>👤 真名（必填，用于登录）</label>
@@ -185,6 +185,9 @@
 </div>
 
 <script>
+    // ===== 添加后端 API 基础地址 =====
+    const API_BASE = 'https://hell-court-forum-production-caf1.up.railway.app';
+
     // ---------- Tab 切换 ----------
     const tabs = document.querySelectorAll('.tab');
     const loginForm = document.getElementById('loginForm');
@@ -218,7 +221,6 @@
         const faction = document.getElementById('regFaction').value;
         const msg = document.getElementById('registerMessage');
 
-        // 校验必填项
         if (!realName || !displayName || !password) {
             showMessage(msg, '⚠️ 真名、昵称和密码都不能为空');
             return;
@@ -229,17 +231,11 @@
         }
 
         try {
-            // 构造 URL 参数（后端暂未接收 realm/faction，可先忽略或扩展）
-            const url = `/api/auth/register?nickname=${encodeURIComponent(realName)}&password=${encodeURIComponent(password)}&displayName=${encodeURIComponent(displayName)}`;
-            // 如果需要传递 realm 和 faction，后端需添加对应 @RequestParam，此处暂不传（选填字段可后续扩展）
-
-            const response = await fetch(url, {
-                method: 'POST'
-            });
+            const url = `${API_BASE}/api/auth/register?nickname=${encodeURIComponent(realName)}&password=${encodeURIComponent(password)}&displayName=${encodeURIComponent(displayName)}`;
+            const response = await fetch(url, { method: 'POST' });
             const data = await response.json();
             if (data.code === 200) {
                 showMessage(msg, `✅ ${data.message}`, false);
-                // 注册成功自动切换到登录 tab
                 setTimeout(() => {
                     document.querySelector('[data-tab="login"]').click();
                     document.getElementById('loginNickname').value = realName;
@@ -266,7 +262,7 @@
         }
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(`${API_BASE}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nickname, password })

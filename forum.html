@@ -7,7 +7,6 @@
     <style>
         /* ===== CSS 变量：三种主题 ===== */
         :root {
-            /* 默认紫色主题 */
             --bg-body: #0b0a0c;
             --bg-header: rgba(30, 26, 34, 0.85);
             --border-header: #3d2a47;
@@ -30,7 +29,6 @@
             --color-success: #a0d4a0;
         }
 
-        /* 红色主题 */
         [data-theme="red"] {
             --bg-body: #0a0a0a;
             --bg-header: rgba(80, 0, 0, 0.6);
@@ -54,7 +52,6 @@
             --color-success: #80d4a0;
         }
 
-        /* 荧光绿主题 */
         [data-theme="green"] {
             --bg-body: #0a0a0a;
             --bg-header: rgba(0, 40, 0, 0.6);
@@ -89,7 +86,6 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* 顶部导航 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -103,17 +99,17 @@
             margin-bottom: 30px;
             transition: all 0.3s;
         }
-		.pinned-badge {
-		    color: #ff4444;
-		    font-size: 0.75rem;
-		    font-weight: bold;
-		    background: rgba(255, 68, 68, 0.15);
-		    padding: 2px 12px;
-		    border-radius: 12px;
-		    border: 1px solid rgba(255, 68, 68, 0.3);
-		    white-space: nowrap;
-		    margin-left: 10px;
-		}
+        .pinned-badge {
+            color: #ff4444;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background: rgba(255, 68, 68, 0.15);
+            padding: 2px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            white-space: nowrap;
+            margin-left: 10px;
+        }
         .logo {
             font-size: 1.8rem;
             color: var(--color-logo);
@@ -153,13 +149,12 @@
             box-shadow: 0 0 30px var(--color-logo);
         }
 
-        /* 主题切换按钮组 */
-		.theme-switcher {
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;   /* 让按钮和文字都居中 */
-		    gap: 4px;              /* 标题与按钮间的间距 */
-		}
+        .theme-switcher {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
         .theme-btn {
             width: 30px;
             height: 30px;
@@ -184,7 +179,6 @@
 
         .container { max-width: 900px; margin: 0 auto; }
 
-        /* 悬浮按钮 */
         .fab {
             position: fixed;
             bottom: 40px;
@@ -210,7 +204,6 @@
             box-shadow: var(--shadow-btn);
         }
 
-        /* 模态框 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -316,7 +309,6 @@
         }
         .modal-msg.success { color: var(--color-success); }
 
-        /* 帖子列表 */
         .post-list {
             display: flex;
             flex-direction: column;
@@ -368,7 +360,6 @@
             word-break: break-word;
         }
 
-        /* 分页 */
         .pagination {
             margin-top: 30px;
             display: flex;
@@ -397,15 +388,15 @@
             color: #fff;
             box-shadow: var(--shadow-btn);
         }
-		.theme-label {
-		    color: var(--color-text);
-		    font-size: 0.8rem;
-		    opacity: 0.8;
-		}
-		.theme-buttons {
-		    display: flex;
-		    gap: 6px;
-		}
+        .theme-label {
+            color: var(--color-text);
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        .theme-buttons {
+            display: flex;
+            gap: 6px;
+        }
         .empty {
             text-align: center;
             color: var(--color-meta);
@@ -425,282 +416,245 @@
     </style>
 </head>
 <body>
-
-<!-- ===== 顶部导航（含主题切换按钮） ===== -->
-<div class="header">
-    <div class="logo">👻 幽冥论坛</div>
-	<a href="/wall.html" style="color:var(--color-muted);font-size:0.9rem;margin-left:12px;text-decoration:none;">
-	        📝 留言墙
-	    </a>
-		<a href="/rank.html" style="color:var(--color-link);">🏆 名气榜</a>
-    <div class="user-info">
-        <a href="#" id="myProfileLink"><span id="userDisplay">加载中...</span></a>
-        <!-- 主题切换按钮组 -->
-        <div class="theme-switcher">
-			<span class="theme-label">主题切换</span>
-			    <div class="theme-buttons">
-            <button class="theme-btn active" data-theme="purple" title="紫色幽冥" style="color:#7c5f8c;"></button>
-            <button class="theme-btn" data-theme="red" title="红黑血月" style="color:#cc2222;"></button>
-            <button class="theme-btn" data-theme="green" title="荧光赛博" style="color:#22cc22;"></button>
-			</div>
+    <div class="header">
+        <div class="logo">👻 幽冥论坛</div>
+        <a href="/wall.html" style="color:var(--color-muted);font-size:0.9rem;margin-left:12px;text-decoration:none;">📝 留言墙</a>
+        <a href="/rank.html" style="color:var(--color-link);">🏆 名气榜</a>
+        <div class="user-info">
+            <a href="#" id="myProfileLink"><span id="userDisplay">加载中...</span></a>
+            <div class="theme-switcher">
+                <span class="theme-label">主题切换</span>
+                <div class="theme-buttons">
+                    <button class="theme-btn active" data-theme="purple" title="紫色幽冥" style="color:#7c5f8c;"></button>
+                    <button class="theme-btn" data-theme="red" title="红黑血月" style="color:#cc2222;"></button>
+                    <button class="theme-btn" data-theme="green" title="荧光赛博" style="color:#22cc22;"></button>
+                </div>
+            </div>
+            <button class="btn-logout" id="logoutBtn">🚪 离开地府</button>
         </div>
-        <button class="btn-logout" id="logoutBtn">🚪 离开地府</button>
     </div>
-</div>
 
-<!-- ===== 帖子列表 ===== -->
-<div class="container">
-    <div class="post-list" id="postList">
-        <div class="loading">⚡ 正在召唤幽冥帖子……</div>
-    </div>
-    <div class="pagination" id="pagination"></div>
-</div>
-
-<!-- ===== 悬浮“+”按钮 ===== -->
-<button class="fab" id="fabBtn">＋</button>
-
-<!-- ===== 发帖模态框 ===== -->
-<div class="modal-overlay" id="postModal">
-    <div class="modal-box">
-        <button class="modal-close" id="modalCloseBtn">✕</button>
-        <h2>📜 小鬼注意，谨言慎行</h2>
-        <input type="text" id="postTitle" placeholder="帖子标题（例如：今日地府见闻）">
-        <textarea id="postContent" placeholder="✍️ 分享你在冥界的故事……"></textarea>
-        <div class="btn-row">
-            <button class="btn-cancel" id="modalCancelBtn">取消</button>
-            <button class="btn-submit" id="modalSubmitBtn">📤 发布</button>
+    <div class="container">
+        <div class="post-list" id="postList">
+            <div class="loading">⚡ 正在召唤幽冥帖子……</div>
         </div>
-        <div class="modal-msg" id="modalMsg"></div>
+        <div class="pagination" id="pagination"></div>
     </div>
-</div>
 
-<script>
-    // ============================================================
-    //  0. 主题切换逻辑
-    // ============================================================
-    const themeBtns = document.querySelectorAll('.theme-btn');
-    // 从 localStorage 读取上次主题
-    const savedTheme = localStorage.getItem('forumTheme') || 'purple';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.theme === savedTheme);
-        btn.addEventListener('click', function() {
-            const theme = this.dataset.theme;
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('forumTheme', theme);
-            themeBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
+    <button class="fab" id="fabBtn">＋</button>
 
-    // ============================================================
-    //  1. 全局变量 & 用户校验
-    // ============================================================
-    const token = localStorage.getItem('token');
-    const nickname = localStorage.getItem('nickname') || '无名鬼';
-    const userId = localStorage.getItem('userId');
+    <div class="modal-overlay" id="postModal">
+        <div class="modal-box">
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+            <h2>📜 小鬼注意，谨言慎行</h2>
+            <input type="text" id="postTitle" placeholder="帖子标题（例如：今日地府见闻）">
+            <textarea id="postContent" placeholder="✍️ 分享你在冥界的故事……"></textarea>
+            <div class="btn-row">
+                <button class="btn-cancel" id="modalCancelBtn">取消</button>
+                <button class="btn-submit" id="modalSubmitBtn">📤 发布</button>
+            </div>
+            <div class="modal-msg" id="modalMsg"></div>
+        </div>
+    </div>
 
-    document.getElementById('userDisplay').textContent = `👤 ${nickname}`;
+    <script>
+        // ===== 添加后端 API 基础地址 =====
+        const API_BASE = 'https://hell-court-forum-production-caf1.up.railway.app';
 
-    if (!token) {
-        window.location.href = '/login.html';
-    }
-
-    let currentPage = 0;
-    const pageSize = 10;
-    let totalPages = 0;
-
-    // ============================================================
-    //  2. 工具函数
-    // ============================================================
-    function escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    function showModalMsg(msg, isSuccess = false) {
-        const el = document.getElementById('modalMsg');
-        el.textContent = msg;
-        el.className = 'modal-msg' + (isSuccess ? ' success' : '');
-    }
-
-    function getAuthHeaders() {
-        return {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-    }
-
-    // ============================================================
-    //  3. 加载帖子列表
-    // ============================================================
-    async function loadPosts(page = 0) {
-        const listEl = document.getElementById('postList');
-        listEl.innerHTML = '<div class="loading">⚡ 正在召唤幽冥帖子……</div>';
-
-        try {
-            const resp = await fetch(`/api/posts?page=${page}&size=${pageSize}`);
-            const data = await resp.json();
-            if (data.code === 200) {
-                const posts = data.data || [];
-                totalPages = Math.ceil(data.total / pageSize) || 0;
-                renderPosts(posts);
-                renderPagination(page);
-            } else {
-                listEl.innerHTML = `<div class="empty">❌ 召唤失败：${data.message}</div>`;
-            }
-        } catch (e) {
-            listEl.innerHTML = '<div class="empty">❌ 网络异常，请检查后端</div>';
-            console.error(e);
-        }
-    }
-
-	function renderPosts(posts) {
-		
-	    const listEl = document.getElementById('postList');
-	    if (!posts || posts.length === 0) {
-	        listEl.innerHTML = '<div class="empty">📭 地府空荡荡，快去发帖吧！</div>';
-	        return;
-	    }
-
-	    let html = '';
-	    posts.forEach(function(post) {
-	        const isPinned = (post.id === 1) || (post.title && post.title.includes('天地初开'));
-
-	        let timeDisplay = post.displayTime || '未知时间';
-	        if (isPinned) {
-	            timeDisplay = '📌 洪荒妖庭末期';
-	        }
-
-	        const viewCount = post.viewCount || 0;
-	        const likeCount = post.likeCount || 0;
-	        const viewDisplay = isPinned ? '9999+' : (viewCount >= 9999 ? '9999+' : viewCount);
-	        const likeDisplay = isPinned ? '9999+' : (likeCount >= 9999 ? '9999+' : likeCount);
-
-	        html += `
-	            <div class="post-item">
-	                <div class="post-title" style="display:flex;justify-content:space-between;align-items:center;">
-	                    <span>${escapeHtml(post.title)}</span>
-	                    ${isPinned ? `<span class="pinned-badge">📌 置顶</span>` : ''}
-	                </div>
-	                <div class="post-meta">
-	                    <a href="/profile.html?userId=${post.userId}">
-	                        👤 ${escapeHtml(post.nickname)}
-	                    </a>
-	                    <span>👁️ ${viewDisplay} 次围观</span>
-	                    <span>❤️ ${likeDisplay} 点赞</span>
-	                    <span>📅 ${timeDisplay}</span>
-	                </div>
-	                <div class="post-content">${escapeHtml(post.content)}</div>
-	            </div>
-	        `;
-	    });
-
-	    listEl.innerHTML = html;
-	}
-
-    function renderPagination(current) {
-        const el = document.getElementById('pagination');
-        if (totalPages <= 1) { el.innerHTML = ''; return; }
-        let html = '';
-        for (let i = 0; i < totalPages; i++) {
-            html += `<button data-page="${i}" class="${i === current ? 'active' : ''}">${i + 1}</button>`;
-        }
-        el.innerHTML = html;
-        el.querySelectorAll('button').forEach(btn => {
+        // 主题切换逻辑
+        const themeBtns = document.querySelectorAll('.theme-btn');
+        const savedTheme = localStorage.getItem('forumTheme') || 'purple';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === savedTheme);
             btn.addEventListener('click', function() {
-                const page = parseInt(this.dataset.page);
-                currentPage = page;
-                loadPosts(page);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                const theme = this.dataset.theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('forumTheme', theme);
+                themeBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
             });
         });
-    }
 
-    // ============================================================
-    //  4. 发帖（模态框）
-    // ============================================================
-    const modal = document.getElementById('postModal');
-    const fabBtn = document.getElementById('fabBtn');
-    const closeBtn = document.getElementById('modalCloseBtn');
-    const cancelBtn = document.getElementById('modalCancelBtn');
-    const submitBtn = document.getElementById('modalSubmitBtn');
+        // 全局变量
+        const token = localStorage.getItem('token');
+        const nickname = localStorage.getItem('nickname') || '无名鬼';
+        const userId = localStorage.getItem('userId');
+        document.getElementById('userDisplay').textContent = `👤 ${nickname}`;
+        if (!token) window.location.href = '/login.html';
 
-    function openModal() {
-        modal.classList.add('active');
-        document.getElementById('postTitle').value = '';
-        document.getElementById('postContent').value = '';
-        document.getElementById('modalMsg').textContent = '';
-        document.getElementById('postTitle').focus();
-    }
+        let currentPage = 0;
+        const pageSize = 10;
+        let totalPages = 0;
 
-    function closeModal() {
-        modal.classList.remove('active');
-    }
-
-    fabBtn.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeModal();
-    });
-
-    submitBtn.addEventListener('click', async function() {
-        const title = document.getElementById('postTitle').value.trim();
-        const content = document.getElementById('postContent').value.trim();
-        if (!title || !content) {
-            showModalMsg('⚠️ 标题和内容都不能为空');
-            return;
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        try {
-            const resp = await fetch('/api/posts', {
-                method: 'POST',
-                headers: getAuthHeaders(),
-                body: JSON.stringify({ title, content })
-            });
-            const data = await resp.json();
-            if (data.code === 200) {
-                showModalMsg(`✅ ${data.message}`, true);
-                setTimeout(() => {
-                    closeModal();
-                    loadPosts(currentPage);
-                }, 800);
-            } else {
-                showModalMsg(`❌ ${data.message}`);
+        function showModalMsg(msg, isSuccess = false) {
+            const el = document.getElementById('modalMsg');
+            el.textContent = msg;
+            el.className = 'modal-msg' + (isSuccess ? ' success' : '');
+        }
+
+        function getAuthHeaders() {
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+
+        async function loadPosts(page = 0) {
+            const listEl = document.getElementById('postList');
+            listEl.innerHTML = '<div class="loading">⚡ 正在召唤幽冥帖子……</div>';
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/posts?page=${page}&size=${pageSize}`);
+                const data = await resp.json();
+                if (data.code === 200) {
+                    const posts = data.data || [];
+                    totalPages = Math.ceil(data.total / pageSize) || 0;
+                    renderPosts(posts);
+                    renderPagination(page);
+                } else {
+                    listEl.innerHTML = `<div class="empty">❌ 召唤失败：${data.message}</div>`;
+                }
+            } catch (e) {
+                listEl.innerHTML = '<div class="empty">❌ 网络异常，请检查后端</div>';
+                console.error(e);
             }
-        } catch (e) {
-            showModalMsg('❌ 发帖失败，请检查网络');
-            console.error(e);
         }
-    });
 
-    // Ctrl+Enter 快速提交
-    document.getElementById('postContent').addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'Enter') {
-            submitBtn.click();
+        function renderPosts(posts) {
+            const listEl = document.getElementById('postList');
+            if (!posts || posts.length === 0) {
+                listEl.innerHTML = '<div class="empty">📭 地府空荡荡，快去发帖吧！</div>';
+                return;
+            }
+
+            let html = '';
+            posts.forEach(function(post) {
+                const isPinned = (post.id === 1) || (post.title && post.title.includes('天地初开'));
+                let timeDisplay = post.displayTime || '未知时间';
+                if (isPinned) timeDisplay = '📌 洪荒妖庭末期';
+                const viewCount = post.viewCount || 0;
+                const likeCount = post.likeCount || 0;
+                const viewDisplay = isPinned ? '9999+' : (viewCount >= 9999 ? '9999+' : viewCount);
+                const likeDisplay = isPinned ? '9999+' : (likeCount >= 9999 ? '9999+' : likeCount);
+
+                html += `
+                    <div class="post-item">
+                        <div class="post-title" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>${escapeHtml(post.title)}</span>
+                            ${isPinned ? `<span class="pinned-badge">📌 置顶</span>` : ''}
+                        </div>
+                        <div class="post-meta">
+                            <a href="/profile.html?userId=${post.userId}">👤 ${escapeHtml(post.nickname)}</a>
+                            <span>👁️ ${viewDisplay} 次围观</span>
+                            <span>❤️ ${likeDisplay} 点赞</span>
+                            <span>📅 ${timeDisplay}</span>
+                        </div>
+                        <div class="post-content">${escapeHtml(post.content)}</div>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
         }
-    });
 
-    // ============================================================
-    //  5. 退出登录 & “我的空间”链接
-    // ============================================================
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.clear();
-        window.location.href = '/login.html';
-    });
+        function renderPagination(current) {
+            const el = document.getElementById('pagination');
+            if (totalPages <= 1) { el.innerHTML = ''; return; }
+            let html = '';
+            for (let i = 0; i < totalPages; i++) {
+                html += `<button data-page="${i}" class="${i === current ? 'active' : ''}">${i + 1}</button>`;
+            }
+            el.innerHTML = html;
+            el.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const page = parseInt(this.dataset.page);
+                    currentPage = page;
+                    loadPosts(page);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+        }
 
-    const myUserId = localStorage.getItem('userId');
-    if (myUserId) {
-        document.getElementById('myProfileLink').href = `/profile.html?userId=${myUserId}`;
-    }
+        // 发帖
+        const modal = document.getElementById('postModal');
+        const fabBtn = document.getElementById('fabBtn');
+        const closeBtn = document.getElementById('modalCloseBtn');
+        const cancelBtn = document.getElementById('modalCancelBtn');
+        const submitBtn = document.getElementById('modalSubmitBtn');
 
-    // ============================================================
-    //  6. 启动！
-    // ============================================================
-    loadPosts(0);
-</script>
+        function openModal() {
+            modal.classList.add('active');
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            document.getElementById('modalMsg').textContent = '';
+            document.getElementById('postTitle').focus();
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        fabBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+
+        submitBtn.addEventListener('click', async function() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            if (!title || !content) {
+                showModalMsg('⚠️ 标题和内容都不能为空');
+                return;
+            }
+
+            try {
+                const resp = await fetch(`${API_BASE}/api/posts`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ title, content })
+                });
+                const data = await resp.json();
+                if (data.code === 200) {
+                    showModalMsg(`✅ ${data.message}`, true);
+                    setTimeout(() => {
+                        closeModal();
+                        loadPosts(currentPage);
+                    }, 800);
+                } else {
+                    showModalMsg(`❌ ${data.message}`);
+                }
+            } catch (e) {
+                showModalMsg('❌ 发帖失败，请检查网络');
+                console.error(e);
+            }
+        });
+
+        document.getElementById('postContent').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') submitBtn.click();
+        });
+
+        // 退出登录 & 个人空间链接
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+
+        const myUserId = localStorage.getItem('userId');
+        if (myUserId) {
+            document.getElementById('myProfileLink').href = `/profile.html?userId=${myUserId}`;
+        }
+
+        // 启动
+        loadPosts(0);
+    </script>
 </body>
 </html>

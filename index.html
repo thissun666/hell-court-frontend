@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>阴曹地府论坛</title>
+    <style>
+        body {
+            background: #0b0a0c;
+            color: #b8a7c9;
+            font-family: "KaiTi", serif;
+            text-align: center;
+            padding-top: 100px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #7c5f8c;
+            text-shadow: 0 0 30px #3d2a47;
+        }
+        .time {
+            color: #5a4a5e;
+            margin-top: 30px;
+        }
+        .footer {
+            margin-top: 40px;
+            color: #5a4a5e;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>阳寿已尽，欢迎来到阴曹地府论坛</h1>
+    <p class="time">⏳ 阴间当前时刻：<span id="currentTime"></span></p>
+    <p class="footer">—— 地府酆都城 · AI技术司总负责人 敬呈</p>
+
+    <script>
+        // 1. 显示当前时间（格式化）
+        document.getElementById('currentTime').textContent = new Date().toLocaleString('zh-CN', { hour12: false });
+
+        // 2. 等待 3.5 秒后跳转到登录页
+        setTimeout(function() {
+            window.location.href = '/login.html';
+        }, 3500);
+    </script>
+</body>
+</html>
