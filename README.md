@@ -97,7 +97,7 @@ hell-court-forum/
    编辑 `src/main/resources/application.properties`，按需修改数据库路径、JWT 密钥等：
    ```properties
    spring.datasource.url=jdbc:h2:file:./hell_db;DB_CLOSE_ON_EXIT=FALSE
-   jwt.secret=YinJianFaTing_2024_HeiBaiWuChang_ZhuGeLiang
+   jwt.secret=${JWT_SECRET:please-change-me}
    server.port=8080
    ```
 

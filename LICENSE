@@ -1,26 +1,21 @@
-阴曹地府论坛（Hell Court Forum）非商业使用许可协议
-版本 1.0，生效日期：2026年10月13日
+MIT License
 
-版权所有 (c) 2026 thissun666
+Copyright (c) 2026 thissun666
 
-特此免费授予任何获得本软件及相关文档文件（以下简称“软件”）副本的人，在遵守以下条件的前提下，不受限制地处理本软件，包括但不限于使用、复制、修改、合并、发布、分发、再许可和/或销售本软件副本的权利：
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. 非商业性使用限制
-   本软件仅允许用于个人学习、技术交流、非盈利性娱乐等非商业目的。
-   严禁将本软件或其任何衍生作品用于任何商业用途，包括但不限于：
-   - 出售、出租、许可本软件或其衍生作品；
-   - 将本软件集成到商业产品或服务中；
-   - 利用本软件进行广告推广、流量变现或任何盈利行为。
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2. 版权声明保留
-   上述版权声明和本许可声明应包含在本软件的所有副本或主要部分中。
-   不得删除、修改或隐藏本软件及其衍生作品中的任何版权声明、免责声明或作者署名。
-
-3. 免责声明
-   本软件按“原样”提供，不提供任何形式的明示或暗示担保，包括但不限于对适销性、特定用途适用性和非侵权性的担保。在任何情况下，作者或版权持有人均不对任何索赔、损害或其他责任负责，无论是在合同诉讼、侵权行为还是其他方面，均因本软件或本软件的使用或其他交易而产生、从中产生或与之相关。
-
-4. 法律合规
-   使用者应确保其使用本软件的行为符合中华人民共和国相关法律法规。因使用本软件产生的任何法律风险由使用者自行承担。
-
-5. 附加条款
-   本项目为个人非盈利娱乐项目，禁止将本项目用于任何违反法律法规、侵犯他人权益或违背公序良俗的用途。
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
